@@ -3,22 +3,22 @@ Shader "Unlit/Shader1"
     Properties
     {
         // Input Data
-        _MainTex ("Texture", 2D) = "white" {}
+        //_MainTex ("Texture", 2D) = "white" {}
+        _Value("Value", Float) = 1.0
     }
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-        LOD 100
 
         Pass
         {
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
+
+            float _Value;
 
             struct appdata
             {
@@ -33,8 +33,8 @@ Shader "Unlit/Shader1"
                 float4 vertex : SV_POSITION;
             };
 
-            sampler2D _MainTex;
-            float4 _MainTex_ST;
+           // sampler2D _MainTex;
+           // float4 _MainTex_ST;
 
             v2f vert (appdata v)
             {
