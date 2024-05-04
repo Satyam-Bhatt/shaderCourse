@@ -4,7 +4,7 @@ Shader "Unlit/Shader1"
     {
         // Input Data
         //_MainTex ("Texture", 2D) = "white" {}
-        _Value("Value", Float) = 1.0
+        _Color("Color", color) = (1, 1, 1, 1)
     }
     SubShader
     {
@@ -18,22 +18,24 @@ Shader "Unlit/Shader1"
 
             #include "UnityCG.cginc"
 
-            float _Value;
+            float4 _Color;
 
             struct appdata
             {
                 float4 vertex : POSITION;
-                float3 normals : NORMAL;
-                float4 color : COLOR0;
-                float4 tangent : TANGENT;
-                float2 uv0 : TEXCOORD0;
-                float2 uv1 : TEXCOORD1;
-                float2 uv2 : TEXCOORD2;
+                //float3 normals : NORMAL;
+                //float4 color : COLOR0;
+                //float4 tangent : TANGENT;
+                //float2 uv0 : TEXCOORD0;
+                //float2 uv1 : TEXCOORD1;
+                //float2 uv2 : TEXCOORD2;
             };
 
             struct v2f
             {
-                float2 uv : TEXCOORD0;
+                //float2 uv : TEXCOORD0;
+                //float uv2 : TEXCOORD1;
+                //float4 joke : TEXCOORD4;
                 float4 vertex : SV_POSITION;
             };
 
@@ -44,18 +46,13 @@ Shader "Unlit/Shader1"
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
+               // o.uv = TRANSFORM_TEX(v.uv, _MainTex); //ignore for now
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            float4 frag (v2f i) : SV_Target
             {
-                // sample the texture
-                fixed4 col = tex2D(_MainTex, i.uv);
-                // apply fog
-                UNITY_APPLY_FOG(i.fogCoord, col);
-                return col;
+                return _Color;
             }
             ENDCG
         }
