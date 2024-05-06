@@ -64,11 +64,13 @@ Shader "Unlit/Shader1"
             float4 frag (v2f i) : SV_Target
             {
                 float t = InverseLerp(_Start, _End, i.uv.x);
-                return float4(t,t,t,1) ;
-               // float4 outColor2 = lerp(_ColorA, _ColorB, i.uv.y);
-               // float4 colorAdd = outColor + outColor2;
+                //float t_Clamp =  saturate(t);
+                float t_Frac = frac(t);
+                return t_Frac;
+                //float4 outColor2 = lerp(_ColorA, _ColorB, t_Clamp);
+               
 
-               //return float4(i.uv.xx, i.uv.y, 1);
+               //return float4(outColor2);
             }
             ENDCG
         }
