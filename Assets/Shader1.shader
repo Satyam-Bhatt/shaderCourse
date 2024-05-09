@@ -63,7 +63,12 @@ Shader "Unlit/Shader1"
 
             float4 frag (v2f i) : SV_Target
             {
-                float x = cos(i.uv.x * 2 * 3.14) * 0.5 + 0.5;
+                //float2 x = cos(i.uv.xy * 2 * 3.14) * 0.5 + 0.5;
+                //return float4(x,0,1);
+                
+                float offset = cos(i.uv.y * 8 * 2 * 3.14) * 0.01;
+
+                float x = cos((i.uv.x * _Time * 4 + offset) * 8 * 3.14) * 0.5 + 0.5;
                 return x;
             }
             ENDCG
