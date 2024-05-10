@@ -66,9 +66,9 @@ Shader "Unlit/Shader1"
                 //float2 x = cos(i.uv.xy * 2 * 3.14) * 0.5 + 0.5;
                 //return float4(x,0,1);
                 
-                float offset = cos(i.uv.y * 8 * 2 * 3.14) * 0.01;
+                float offset = i.uv.y; // cos(i.uv.y * 8 * 2 * 3.14) * 0.01;
 
-                float x = cos((i.uv.x * _Time * 4 + offset) * 8 * 3.14) * 0.5 + 0.5;
+                float x = cos((i.uv.x + _Time * 4 + offset) * 8 * 3.14) * 0.5 + 0.5;
                 return x;
             }
             ENDCG
