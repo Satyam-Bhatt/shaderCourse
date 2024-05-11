@@ -11,10 +11,20 @@ Shader "Unlit/Shader1"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { 
+            "RenderType"="Transparent"
+            "Queue"="Transparent"
+            }
 
         Pass
         {
+
+            Cull Off
+
+            ZWrite Off
+            Blend One One
+            //Blend DstColor Zero
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -66,10 +76,13 @@ Shader "Unlit/Shader1"
                 //float2 x = cos(i.uv.xy * 2 * 3.14) * 0.5 + 0.5;
                 //return float4(x,0,1);
                 
-                float offset = i.uv.y; // cos(i.uv.y * 8 * 2 * 3.14) * 0.01;
+                float offset = cos(i.uv.x * 8 * 2 * 3.14) * 0.01;
 
-                float x = cos((i.uv.x + _Time * 4 + offset) * 8 * 3.14) * 0.5 + 0.5;
-                return x;
+                float l = 0.95 - i.uv.y;
+
+                float x = cos((i.uv.y - _Time * 4 + offset) * 8 * 3.14) * 0.5 + 0.5;
+                float r = l * x;
+                return r * _ColorA * (abs(i.normal.y) < 0.999);
             }
             ENDCG
         }
