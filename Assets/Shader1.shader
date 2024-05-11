@@ -22,6 +22,7 @@ Shader "Unlit/Shader1"
             Cull Off
 
             ZWrite Off
+            ZTest LEqual
             Blend One One
             //Blend DstColor Zero
 
@@ -82,7 +83,14 @@ Shader "Unlit/Shader1"
 
                 float x = cos((i.uv.y - _Time * 4 + offset) * 8 * 3.14) * 0.5 + 0.5;
                 float r = l * x;
-                return r * _ColorA * (abs(i.normal.y) < 0.999);
+                float topBottom = (abs(i.normal.y) < 0.999);
+                float topLo = (abs(i.normal.y) > 0.999);
+
+                return r * _ColorA * topBottom + topLo * _ColorB;
+                //return som;
+                //float topBottom = _ColorB * (abs(i.normal.y) > 0.999);
+
+                //return some + topBottom;
             }
             ENDCG
         }
