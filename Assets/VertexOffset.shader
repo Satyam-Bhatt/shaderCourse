@@ -6,8 +6,8 @@ Shader "Unlit/VertexOffset"
         //_MainTex ("Texture", 2D) = "white" {}
         _ColorA("Color A", Color) = (1, 1, 1, 1)
         _ColorB("Color B", Color) = (1, 1, 1, 1)
-        _Start("Start Position", Range(0,1)) = 1
-        _End("End Position", Range(0,1)) = 0
+        _Start("Start Position", Range(-1,1)) = 1
+        _End("End Position", Range(-1,1)) = 0
         _WaveAmp("Wave Amplitude", Range(0,2)) = 0.1
     }
     SubShader
@@ -65,8 +65,13 @@ Shader "Unlit/VertexOffset"
             {
                 v2f o;
 
-                float t = cos(v.uv0.x * 2.0 * 3.1415926 + _Time * 50);
-                v.vertex.y = t *_WaveAmp;
+                //float t = cos(v.uv0.x * 2.0 * 3.1415926 + _Time * 50);
+                //v.vertex.y = t *_WaveAmp;
+
+                float2 uv_Centered = v.uv0 * 2 - 1;
+                float radialDistance = length(uv_Centered);
+                float tt = cos(radialDistance * 4.0 * 3.1415926 - _Time * 50);
+                v.vertex.y = tt * _WaveAmp;
 
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.normal = UnityObjectToWorldNormal(v.normals);
@@ -80,8 +85,13 @@ Shader "Unlit/VertexOffset"
 
             float4 frag (v2f i) : SV_Target
             {
+                float2 uv_Centered = i.uv * 2 - 1;
+                float radialDistance = length(uv_Centered);
+                float tt = cos(radialDistance * 2.0 * 3.1415926 - _Time * 50) * 0.5 + 0.5;
+                return float4(tt.xxx,1);
+
                 float t = cos(i.uv.x * 2.0 * 3.1415926 + _Time * 50) * 0.5 + 0.5;
-                return float4(t.r,t.r,t.r,1);
+                //return float4(t.r,t.r,t.r,1);
             }
             ENDCG
         }
