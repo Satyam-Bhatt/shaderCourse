@@ -8,6 +8,7 @@ Shader "Unlit/VertexOffset"
         _ColorB("Color B", Color) = (1, 1, 1, 1)
         _Start("Start Position", Range(0,1)) = 1
         _End("End Position", Range(0,1)) = 0
+        _WaveAmp("Wave Amplitude", Range(0,2)) = 0.1
     }
     SubShader
     {
@@ -19,7 +20,7 @@ Shader "Unlit/VertexOffset"
         Pass
         {
 
-            Cull Back
+            Cull Off
 
             ZWrite On
             ZTest LEqual
@@ -36,6 +37,7 @@ Shader "Unlit/VertexOffset"
             float4 _ColorB;
             float _Start;
 			float _End;
+            float _WaveAmp;
 
             struct appdata
             {
@@ -62,6 +64,10 @@ Shader "Unlit/VertexOffset"
             v2f vert (appdata v)
             {
                 v2f o;
+
+                float t = cos(v.uv0.x * 2.0 * 3.1415926 + _Time * 50);
+                v.vertex.y = t *_WaveAmp;
+
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.normal = UnityObjectToWorldNormal(v.normals);
                 o.uv = v.uv0; //(v.uv0 + _Offest) * _Scale;
@@ -74,7 +80,7 @@ Shader "Unlit/VertexOffset"
 
             float4 frag (v2f i) : SV_Target
             {
-                float t = cos(i.uv.x * 2.0 * 3.1415926 * 4 + _Time * 50) * 0.5 + 0.5;
+                float t = cos(i.uv.x * 2.0 * 3.1415926 + _Time * 50) * 0.5 + 0.5;
                 return float4(t.r,t.r,t.r,1);
             }
             ENDCG
