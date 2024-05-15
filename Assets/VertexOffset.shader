@@ -70,8 +70,11 @@ Shader "Unlit/VertexOffset"
 
                 float2 uv_Centered = v.uv0 * 2 - 1;
                 float radialDistance = length(uv_Centered);
+                float t2 =  float4(1-radialDistance.xxx,1);
                 float tt = cos(radialDistance * 2.0 * 3.1415926 - _Time * 50);
-                v.vertex.y = tt * _WaveAmp;
+                float rt =  tt * t2;
+
+                v.vertex.y = rt * _WaveAmp;
 
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.normal = UnityObjectToWorldNormal(v.normals);
@@ -88,8 +91,11 @@ Shader "Unlit/VertexOffset"
                 float2 uv_Centered = i.uv * 2 - 1;
                 float radialDistance = length(uv_Centered);
 
-                float tt = cos(radialDistance * 2.0 * 3.1415926 - _Time * 50) * 0.5 + 0.5;
-                return float4(tt.xxx,1);
+                float t2 =  float4(1-radialDistance.xxx,1);
+
+                float tt = cos(radialDistance * 10.0 * 3.1415926 - _Time * 50) * 0.5 + 0.5;
+                float rt = tt * t2;
+                return float4(rt.xxx,1);
 
                 float t = cos(i.uv.x * 2.0 * 3.1415926 + _Time * 50) * 0.5 + 0.5;
                 //return float4(t.r,t.r,t.r,1);
