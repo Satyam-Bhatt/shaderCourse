@@ -78,7 +78,7 @@ Material:
     - _SrcBlend: 1
     - _Start: -1
     - _UVSec: 0
-    - _WaveAmp: 0.27
+    - _WaveAmp: 0.1
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

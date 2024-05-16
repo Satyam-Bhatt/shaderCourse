@@ -3,6 +3,7 @@ Shader "Unlit/Textured"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _Offset ("Offset", Float) = 0
     }
     SubShader
     {
@@ -10,6 +11,8 @@ Shader "Unlit/Textured"
 
         Pass
         {
+            Cull Off
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -18,6 +21,7 @@ Shader "Unlit/Textured"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            float _Offset;
 
             struct MeshData
             {
@@ -31,6 +35,7 @@ Shader "Unlit/Textured"
                 float4 vertex : SV_POSITION;
             };
 
+
             v2f vert (MeshData v)
             {
                 v2f o;
@@ -39,10 +44,11 @@ Shader "Unlit/Textured"
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            float4 frag (v2f i) : SV_Target
             {
                 // sample the texture
-                fixed4 col = tex2D(_MainTex, i.uv);
+                
+                float4 col = tex2D(_MainTex, i.uv);
                 return col;
             }
             ENDCG
