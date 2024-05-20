@@ -8,10 +8,18 @@ Shader "Unlit/HealthBar"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags {
+            "RenderType"="Opaque"
+            //"RenderType"="Transparent"
+            //"Queue"="Transparent"
+            }
 
         Pass
         {
+            //ZWrite Off
+            //ZTest LEqual
+            //Blend SrcAlpha OneMinusSrcAlpha
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -37,8 +45,9 @@ Shader "Unlit/HealthBar"
             v2f vert (appdata v)
             {
                 v2f o;
+
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = v.uv;    
+                o.uv = v.uv;               
                 return o;
             }
 
@@ -48,13 +57,14 @@ Shader "Unlit/HealthBar"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                //float4 healthColor = lerp(_StartColor, _EndColor, _Health);
+                //float4 healthColor_Value = lerp(_StartColor, _EndColor, _Health);
                 float t_Valuse = InverseLerp(0.2, 0.8, _Health);
                 float4 healthColor = lerp(_StartColor, _EndColor, t_Valuse);
 
                 if(i.uv.x > _Health)
                 {
-                    healthColor = float4(0,0,0,1);
+                    discard;
+                    //healthColor_Value = float4(0,0,0,0.5);
                 }
 
                 float4 col = float4(i.uv,0,1);
