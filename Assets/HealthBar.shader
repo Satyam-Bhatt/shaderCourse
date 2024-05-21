@@ -5,6 +5,7 @@ Shader "Unlit/HealthBar"
         _Health ("Health", Range(0, 1)) = 1
         _StartColor ("Start Color", Color) = (1, 1, 1, 1)
         _EndColor ("End Color", Color) = (1, 1, 1, 1)
+        _MainTex ("MainTex", 2D) = "white" {}
     }
     SubShader
     {
@@ -29,6 +30,7 @@ Shader "Unlit/HealthBar"
             float _Health;
             float4 _StartColor;
 			float4 _EndColor;
+            sampler2D _MainTex;
 
             struct appdata
             {
@@ -48,6 +50,7 @@ Shader "Unlit/HealthBar"
 
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;               
+                //o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
             }
 
@@ -60,15 +63,21 @@ Shader "Unlit/HealthBar"
                 //float4 healthColor_Value = lerp(_StartColor, _EndColor, _Health);
                 float t_Valuse = InverseLerp(0.2, 0.8, _Health);
                 float4 healthColor = lerp(_StartColor, _EndColor, t_Valuse);
+                float4 health_Tex = tex2D(_MainTex, float2(_Health, i.uv.y));
 
                 if(i.uv.x > _Health)
                 {
                     discard;
                     //healthColor_Value = float4(0,0,0,0.5);
                 }
+                else if(_Health == 1)
+                {
+                    health_Tex = tex2D(_MainTex, float2(_Health - 0.1, i.uv.y));
+                }
 
                 float4 col = float4(i.uv,0,1);
-                return healthColor;
+                //return healthColor;
+                return health_Tex;
             }
             ENDCG
         }
