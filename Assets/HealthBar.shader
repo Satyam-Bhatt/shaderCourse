@@ -75,6 +75,11 @@ Shader "Unlit/HealthBar"
                     health_Tex = tex2D(_MainTex, float2(_Health - 0.1, i.uv.y));
                 }
 
+                if(_Health <= 0.2)
+                {
+                    health_Tex = health_Tex * saturate(cos(_Time.y * 10) * 0.5 + 0.8);
+                }
+
                 float4 col = float4(i.uv,0,1);
                 //return healthColor;
                 return health_Tex;
