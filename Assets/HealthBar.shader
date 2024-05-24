@@ -6,7 +6,7 @@ Shader "Unlit/HealthBar"
         _StartColor ("Start Color", Color) = (1, 1, 1, 1)
         _EndColor ("End Color", Color) = (1, 1, 1, 1)
         _MainTex ("MainTex", 2D) = "white" {}
-        _Radius ("Radius", Range(0, 1)) = 0
+        _Radius ("Radius", Range(0, 2)) = 0
     }
     SubShader
     {
@@ -89,15 +89,14 @@ Shader "Unlit/HealthBar"
 
             float4 frag (v2f i) : SV_Target
             {
-                float2 center = float2(i.uv.x - _Radius, i.uv.y - _Radius);
-                float distance = length(center);
+                i.uv = i.uv * 2 - 1;
+                float dis = length(i.uv);
 
-                if(distance > _Radius)
-                {
+                if(_Radius-dis < 0){
                     discard;
-                }
+                    }
 
-                return float4(distance.xxx,1);
+				return float4(dis,0,0,1);
             }
             ENDCG
         }
