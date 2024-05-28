@@ -29,7 +29,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Health: 1
+    - _Health: 0.24
     - _Radius: 2.78
     m_Colors:
     - _EndColor: {r: 0, g: 1, b: 0.035620928, a: 1}

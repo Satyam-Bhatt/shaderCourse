@@ -5,7 +5,7 @@ Shader "Unlit/HealthBar"
         _Health ("Health", Range(0, 1)) = 1
         _StartColor ("Start Color", Color) = (1, 1, 1, 1)
         _EndColor ("End Color", Color) = (1, 1, 1, 1)
-        _MainTex ("MainTex", 2D) = "white" {}
+        [NoScaleOffset] _MainTex ("MainTex", 2D) = "white" {}
         _Radius ("Radius", Range(0, 4)) = 0
     }
     SubShader
@@ -60,35 +60,18 @@ Shader "Unlit/HealthBar"
 				return (v - a) / (b - a);
             }
 
-            float4 storeFunction(v2f i)
-            {
-                                //float4 healthColor_Value = lerp(_StartColor, _EndColor, _Health);
-                float t_Valuse = InverseLerp(0.2, 0.8, _Health);
-                float4 healthColor = lerp(_StartColor, _EndColor, t_Valuse);
-                float4 health_Tex = tex2D(_MainTex, float2(_Health, i.uv.y));
-
-                if(i.uv.x > _Health)
-                {
-                    discard;
-                    //healthColor_Value = float4(0,0,0,0.5);
-                }
-                else if(_Health == 1)
-                {
-                    health_Tex = tex2D(_MainTex, float2(_Health - 0.1, i.uv.y));
-                }
-
-                if(_Health <= 0.2)
-                {
-                    health_Tex = health_Tex * saturate(cos(_Time.y * 10) * 0.5 + 0.8);
-                }
-
-                float4 col = float4(i.uv,0,1);
-                return health_Tex;
-                //return healthColor;
-            }
-
             float4 frag (v2f i) : SV_Target
             {
+                float3 helthcolor = lerp(float3(1,0,0), float3(0,1,0), _Health);
+
+                float mask = _Health < i.uv.x;
+
+                float3 colorthing = lerp(helthcolor, float3(0,0,0), mask);
+
+                return float4(colorthing,1);
+
+
+
                 float disx = distance (i.uv.x, 0.5);
                 float disy = distance(i.uv.y, 0.5);
                 float4 col2 = float4(0,0,0,0);
