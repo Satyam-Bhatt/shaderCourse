@@ -64,9 +64,11 @@ Shader "Unlit/HealthBar"
             {
                 float3 helthcolor = lerp(float3(1,0,0), float3(0,1,0), _Health);
 
-                float mask = _Health < i.uv.x;
+                float mask = _Health > i.uv.x;
 
-                float3 colorthing = lerp(helthcolor, float3(0,0,0), mask);
+                float3 colorthing = lerp(float3(0,0,0), helthcolor, mask);
+
+                clip(mask - 0.5);
 
                 return float4(colorthing,1);
 
