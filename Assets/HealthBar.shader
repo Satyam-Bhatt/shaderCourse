@@ -70,7 +70,9 @@ Shader "Unlit/HealthBar"
 
                 clip(mask - 0.5);
 
-                return float4(colorthing,1);
+                float4 health_Tex2 = tex2D(_MainTex, float2(_Health, i.uv.y));
+
+                return float4(health_Tex2);
 
 
 
