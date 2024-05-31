@@ -72,7 +72,12 @@ Shader "Unlit/HealthBar"
 
                 float4 health_Tex2 = tex2D(_MainTex, float2(_Health, i.uv.y));
 
-                return float4(health_Tex2);
+                float flash = 1;
+
+                if(_Health <= 0.2)
+                flash = (cos(_Time.y * 5) + 2) * 0.3;
+
+                return float4(health_Tex2.rgb * flash.xxx, 1);
 
 
 
