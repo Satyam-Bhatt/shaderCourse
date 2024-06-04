@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit_HealthBar
-  m_Shader: {fileID: 4800000, guid: 9ffee03395158e3418bbc88cbc2b1d53, type: 3}
+  m_Name: SDF
+  m_Shader: {fileID: 4800000, guid: 611611d0d43f7164ca56fae667d15f84, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -24,14 +24,10 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 4fc199f1192141a4abdad3edf103315f, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats:
-    - _Health: 0.82
-    - _Radius: 2.78
-    m_Colors:
-    - _EndColor: {r: 0, g: 1, b: 0.035620928, a: 1}
-    - _StartColor: {r: 1, g: 0, b: 0, a: 1}
+    m_Floats: []
+    m_Colors: []
   m_BuildTextureStacks: []
