@@ -46,7 +46,7 @@ Shader "Unlit/SDFExample"
                 float dis = frac(i.uv.x);
                 float val = clamp(i.uv.x,0.5, 7.5);
                 float dis2 = distance(float2(val, 0.5), float2(i.uv.x, i.uv.y));
-                float dis3 = step(0.4, dis2);
+                float dis3 = step(0.5, dis2);
                 return float4(1 - dis3.xxx,1);
             }
             ENDCG

@@ -62,13 +62,22 @@ Shader "Unlit/HealthBar"
 
             float4 frag (v2f i) : SV_Target
             {
+                i.uv.x = i.uv.x * 8;
+
+                float dis = frac(i.uv.x);
+                float val = clamp(i.uv.x,0.5, 7.5);
+                float dis2 = distance(float2(val, 0.5), float2(i.uv.x, i.uv.y));
+                float mask_2 =1 - step(0.5, dis2);
+
+                i.uv.x = i.uv.x /8;
+
                 float3 helthcolor = lerp(float3(1,0,0), float3(0,1,0), _Health);
 
                 float mask = _Health > i.uv.x;
 
                 float3 colorthing = lerp(float3(0,0,0), helthcolor, mask);
 
-                clip(mask - 0.5);
+                //clip(mask - 0.5); //if we don't need black background
 
                 float4 health_Tex2 = tex2D(_MainTex, float2(_Health, i.uv.y));
 
@@ -77,7 +86,9 @@ Shader "Unlit/HealthBar"
                 if(_Health <= 0.2)
                 flash = (cos(_Time.y * 5) + 2) * 0.3;
 
-                return float4(health_Tex2.rgb * flash.xxx, 1);
+                float3 texMasked = lerp(float3(0,0,0), health_Tex2.rgb, mask_2);
+
+                return float4(texMasked.rgb * flash.xxx * mask, mask_2);
 
 
 
