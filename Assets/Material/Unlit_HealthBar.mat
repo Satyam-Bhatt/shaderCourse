@@ -30,7 +30,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Health: 1
-    - _Radius: 2.78
+    - _Radius: 3.4
     m_Colors:
     - _EndColor: {r: 0, g: 1, b: 0.035620928, a: 1}
     - _StartColor: {r: 1, g: 0, b: 0, a: 1}
