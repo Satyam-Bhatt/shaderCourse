@@ -67,10 +67,10 @@ Shader "Unlit/HealthBar"
                 float dis = frac(i.uv.x);
                 float val = clamp(i.uv.x,0.5, 7.5);
                 float dis2 = distance(float2(val, 0.5), float2(i.uv.x, i.uv.y));
+
                 float mask_2 = 1 - step(0.5, dis2);
 
                 float mm = 1 - step(0.4, dis2);
-                float des = mm == 1;
 
                 //return mm2;
                 //return float4(des.xxx,1);
