@@ -2,6 +2,7 @@ Shader "Unlit/LightingShader"
 {
     Properties
     {
+        _Gloss("Gloss", Float) = 1
     }
     SubShader
     {
@@ -16,6 +17,8 @@ Shader "Unlit/LightingShader"
             #include "UnityCG.cginc"
             #include "Lighting.cginc"
             #include "AutoLight.cginc"
+
+            float _Gloss;
 
             struct appdata
             {
@@ -46,7 +49,7 @@ Shader "Unlit/LightingShader"
             {
                 //diffuse Lighting
 
-                float3 N = i.normal;
+                float3 N = normalize(i.normal);
                 float3 L = _WorldSpaceLightPos0.xyz;
 
                 float3 diffuseLight = max(0, dot(N,L)) * _LightColor0.xyz;
@@ -56,6 +59,9 @@ Shader "Unlit/LightingShader"
                 float3 V = normalize(_WorldSpaceCameraPos.xyz - i.wPos);
                 float3 R = reflect(-L,N);
                 float specularLight = max(0, dot(V,R));
+
+                specularLight = pow(specularLight, _Gloss);
+
                 return float4(specularLight.xxx,1);
 
                 return float4(diffuseLight,1);
