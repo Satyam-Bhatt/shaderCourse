@@ -2,7 +2,7 @@ Shader "Unlit/LightingShader"
 {
     Properties
     {
-        _Gloss("Gloss", Float) = 1
+        _Gloss("Gloss", Range(0,1)) = 1
     }
     SubShader
     {
@@ -52,19 +52,25 @@ Shader "Unlit/LightingShader"
                 float3 N = normalize(i.normal);
                 float3 L = _WorldSpaceLightPos0.xyz;
 
-                float3 diffuseLight = max(0, dot(N,L)) * _LightColor0.xyz;
+                float3 lambert = saturate( dot(N,L) );
+
+                float3 diffuseLight = lambert * _LightColor0.xyz;
 
 
                 //Specular Lighting
                 float3 V = normalize(_WorldSpaceCameraPos.xyz - i.wPos);
-                float3 R = reflect(-L,N);
-                float specularLight = max(0, dot(V,R));
+                //float3 R = reflect(-L,N);
+                float3 H = normalize(V + L);
+                float blinnPhong = max(0, dot(N,H));
+                //float specularLight = max(0, dot(V,R));
 
-                specularLight = pow(specularLight, _Gloss);
+                float3 specularExpoenent = exp2(_Gloss * 11) + 1;
 
+                float specularLight = pow(blinnPhong, specularExpoenent) * (lambert > 0);
+                 
                 return float4(specularLight.xxx,1);
 
-                return float4(diffuseLight,1);
+                //return float4(diffuseLight,1);
             }
             ENDCG
         }
