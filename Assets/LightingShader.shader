@@ -3,6 +3,7 @@ Shader "Unlit/LightingShader"
     Properties
     {
         _Gloss("Gloss", Range(0,1)) = 1
+        _Color("Color", Color) = (1,1,1,1)
     }
     SubShader
     {
@@ -19,6 +20,7 @@ Shader "Unlit/LightingShader"
             #include "AutoLight.cginc"
 
             float _Gloss;
+            float4 _Color;
 
             struct appdata
             {
@@ -66,9 +68,10 @@ Shader "Unlit/LightingShader"
 
                 float3 specularExpoenent = exp2(_Gloss * 11) + 1;
 
-                float specularLight = pow(blinnPhong, specularExpoenent) * (lambert > 0);
+                float3 specularLight = pow(blinnPhong, specularExpoenent) * (lambert > 0);
+                specularLight *= _LightColor0.xyz;
                  
-                return float4(specularLight.xxx,1);
+                return float4(specularLight + diffuseLight * _Color,1);
 
                 //return float4(diffuseLight,1);
             }
