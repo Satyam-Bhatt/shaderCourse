@@ -68,7 +68,7 @@ Shader "Unlit/LightingShader"
 
                 float3 specularExpoenent = exp2(_Gloss * 11) + 1;
 
-                float3 specularLight = pow(blinnPhong, specularExpoenent) * (lambert > 0);
+                float3 specularLight = pow(blinnPhong, specularExpoenent) * (lambert > 0) * _Gloss;
                 specularLight *= _LightColor0.xyz;
                  
                 return float4(specularLight + diffuseLight * _Color,1);
