@@ -77,5 +77,6 @@ Shader "Unlit/LightingShader"
             }
             ENDCG
         }
+
     }
 }
