@@ -54,11 +54,24 @@ Shader "Unlit/LightingShader"
                 //diffuse Lighting
 
                 float3 N = normalize(i.normal);
-                float3 L = _WorldSpaceLightPos0.xyz;
+                float atten;
+                float3 L;
+
+                if(_WorldSpaceLightPos0.w == 0)
+                {
+                    atten = 1;
+					L = normalize(_WorldSpaceLightPos0.xyz);
+                }
+                else
+                {
+                    float3 view = _WorldSpaceCameraPos.xyz - i.wPos;
+					atten = 1 / length(view);
+					L = normalize(view);
+                }
 
                 float3 lambert = saturate( dot(N,L) );
 
-                float3 diffuseLight = lambert * _LightColor0.xyz;
+                float3 diffuseLight = atten * lambert * _LightColor0.xyz;
 
 
                 //Specular Lighting
@@ -126,11 +139,24 @@ Shader "Unlit/LightingShader"
                 //diffuse Lighting
 
                 float3 N = normalize(i.normal);
-                float3 L = _WorldSpaceLightPos0.xyz;
+                float3 L;
+                float atten;
+
+                if(_WorldSpaceLightPos0.w == 0)
+                {
+                    atten = 1;
+					L = normalize(_WorldSpaceLightPos0.xyz);
+                }
+                else
+                {
+                    float3 view = _WorldSpaceCameraPos.xyz - i.wPos;
+					atten = 1 / length(view);
+					L = normalize(view);
+                }
 
                 float3 lambert = saturate( dot(N,L) );
 
-                float3 diffuseLight = lambert * _LightColor0.xyz;
+                float3 diffuseLight = atten * lambert * _LightColor0.xyz;
 
 
                 //Specular Lighting
