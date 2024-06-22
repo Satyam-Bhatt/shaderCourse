@@ -39,10 +39,10 @@ float4 frag(v2f i) : SV_Target
 
     float3 N = normalize(i.normal);
     float3 L = normalize(UnityWorldSpaceLightDir(i.wPos));
-
+    float attenuation = LIGHT_ATTENUATION(i);
     float3 lambert = saturate(dot(N, L));
 
-    float3 diffuseLight = lambert * _LightColor0.xyz;
+    float3 diffuseLight = (attenuation * lambert) * _LightColor0.xyz;
 
 
     //Specular Lighting
@@ -54,7 +54,7 @@ float4 frag(v2f i) : SV_Target
 
     float3 specularExpoenent = exp2(_Gloss * 11) + 1;
 
-    float3 specularLight = pow(blinnPhong, specularExpoenent) * (lambert > 0) * _Gloss;
+    float3 specularLight = pow(blinnPhong, specularExpoenent) * (lambert > 0) * _Gloss * attenuation;
     specularLight *= _LightColor0.xyz;
                  
     return float4(specularLight + diffuseLight * _Color, 1);
