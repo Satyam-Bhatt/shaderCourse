@@ -2,6 +2,8 @@
 #include "Lighting.cginc"
 #include "AutoLight.cginc"
 
+#define USE_LIGHTING
+
 
 float _Gloss;
 float4 _Color;
@@ -35,29 +37,39 @@ v2f vert(appdata v)
 
 float4 frag(v2f i) : SV_Target
 {
+    #ifdef USE_LIGHTING
+        float3 N = normalize(i.normal);
+        float3 L = normalize(UnityWorldSpaceLightDir(i.wPos));
+        float attenuation = LIGHT_ATTENUATION(i);
+        float3 lambert = saturate(dot(N, L));
+
+        float3 diffuseLight = (attenuation * lambert) * _LightColor0.xyz;
+
+
+        //Specular Lighting
+        float3 V = normalize(_WorldSpaceCameraPos.xyz - i.wPos);
+        //float3 R = reflect(-L,N);
+        float3 H = normalize(V + L);
+        float blinnPhong = max(0, dot(N, H));
+        //float specularLight = max(0, dot(V,R));
+
+        float3 specularExpoenent = exp2(_Gloss * 11) + 1;
+
+        float3 specularLight = pow(blinnPhong, specularExpoenent) * (lambert > 0) * _Gloss * attenuation;
+        specularLight *= _LightColor0.xyz;
+                 
+        return float4(specularLight + diffuseLight * _Color, 1);
+    #else
+        #ifdef IS_IN_BASE_PASS
+            return _Color;
+        #else
+            return float4(0,0,0,1);
+        #endif
+    #endif
+    
     //diffuse Lighting
 
-    float3 N = normalize(i.normal);
-    float3 L = normalize(UnityWorldSpaceLightDir(i.wPos));
-    float attenuation = LIGHT_ATTENUATION(i);
-    float3 lambert = saturate(dot(N, L));
 
-    float3 diffuseLight = (attenuation * lambert) * _LightColor0.xyz;
-
-
-    //Specular Lighting
-    float3 V = normalize(_WorldSpaceCameraPos.xyz - i.wPos);
-    //float3 R = reflect(-L,N);
-    float3 H = normalize(V + L);
-    float blinnPhong = max(0, dot(N, H));
-    //float specularLight = max(0, dot(V,R));
-
-    float3 specularExpoenent = exp2(_Gloss * 11) + 1;
-
-    float3 specularLight = pow(blinnPhong, specularExpoenent) * (lambert > 0) * _Gloss * attenuation;
-    specularLight *= _LightColor0.xyz;
-                 
-    return float4(specularLight + diffuseLight * _Color, 1);
 
     //return float4(diffuseLight,1);
 }

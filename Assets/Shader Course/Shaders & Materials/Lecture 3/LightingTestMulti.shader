@@ -19,9 +19,9 @@
         Pass {
             Tags { "LightMode" = "ForwardBase" }
             CGPROGRAM
+            #define IS_IN_BASE_PASS
             #pragma vertex vert
             #pragma fragment frag
-            #define IS_IN_BASE_PASS
             #include "FGLighting.cginc"
             ENDCG
         }
