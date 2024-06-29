@@ -4,6 +4,8 @@ Shader "Unlit/LightingShader"
     {
         _Gloss("Gloss", Range(0,1)) = 1
         _Color("Color", Color) = (1,1,1,1)
+        _RockAlbedo ("RockAlbedo", 2D) = "white" {}
+        [NoScaleOffset]_RockNormals ("Rock Normals", 2D) = "bump" {}
     }
     SubShader
     {
@@ -16,7 +18,7 @@ Shader "Unlit/LightingShader"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-
+            #define IS_IN_BASE_PASS
             #include "CGinclude.cginc"
             
             ENDCG
