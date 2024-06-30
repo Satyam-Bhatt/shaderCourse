@@ -6,6 +6,9 @@ Shader "Unlit/LightingShader"
         _Color("Color", Color) = (1,1,1,1)
         _RockAlbedo ("RockAlbedo", 2D) = "white" {}
         [NoScaleOffset]_RockNormals ("Rock Normals", 2D) = "bump" {}
+        [NoScaleOffset]_RockHeight ("Rock Height", 2D) = "gray" {}
+        _NormalIntensity("Normal Intensity", Range(0,1)) = 1
+        _HeightIntensity("Height Intensity", Range(0,0.2)) = 0
     }
     SubShader
     {

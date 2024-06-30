@@ -9,6 +9,9 @@ float4 _RockAlbedo_ST;
 sampler2D _RockNormals;
 float _Gloss;
 float4 _Color;
+float _NormalIntensity;
+sampler2D _RockHeight;
+float _HeightIntensity;
 
 struct appdata
 {
@@ -32,8 +35,12 @@ struct v2f
 v2f vert(appdata v)
 {
     v2f o;
-    o.vertex = UnityObjectToClipPos(v.vertex);
     o.uv = TRANSFORM_TEX(v.uv, _RockAlbedo);
+
+    float height = tex2Dlod(_RockHeight, float4(o.uv, 0, 0)).r * 2 - 1; //*2-1 would make it go from -1 to 1 earlier it was 0 to 1. Mip level is also needed in x and y axis
+    v.vertex.xyz += v.normal * (height * _HeightIntensity);
+    
+    o.vertex = UnityObjectToClipPos(v.vertex);
     o.normal = UnityObjectToWorldNormal(v.normal);
     
     o.tangent = UnityObjectToWorldDir(v.tangent.xyz);
@@ -53,6 +60,7 @@ float4 frag(v2f i) : SV_Target
     float3 surfaceColor = rock * _Color.rgb;
    
     float3 tangentSpaceNormal = UnpackNormal(tex2D(_RockNormals, i.uv));
+    tangentSpaceNormal = normalize(lerp(float3(0, 0, 1), tangentSpaceNormal, _NormalIntensity));
     
     float3x3 mtxTangentToWorld =
     {
