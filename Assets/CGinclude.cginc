@@ -32,10 +32,19 @@ struct v2f
     LIGHTING_COORDS(5,6)
 };
 
+float2 Rotate(float2 v, float angleRad)
+{
+    float ca = cos(angleRad);
+    float sa = sin(angleRad);
+    return float2(ca * v.x - sa * v.y, sa * v.x + ca * v.y); //This comes from rotation matrix
+}
+
 v2f vert(appdata v)
 {
     v2f o;
     o.uv = TRANSFORM_TEX(v.uv, _RockAlbedo);
+    
+    o.uv = Rotate(o.uv, _Time.y);
 
     float height = tex2Dlod(_RockHeight, float4(o.uv, 0, 0)).r * 2 - 1; //*2-1 would make it go from -1 to 1 earlier it was 0 to 1. Mip level is also needed in x and y axis
     v.vertex.xyz += v.normal * (height * _HeightIntensity);
