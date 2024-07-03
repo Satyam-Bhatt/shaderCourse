@@ -4,6 +4,7 @@ Shader "Unlit/LightingShader"
     {
         _Gloss("Gloss", Range(0,1)) = 1
         _Color("Color", Color) = (1,1,1,1)
+        _AmbientLight("Ambient Light", Color) = (0,0,0,0)
         _RockAlbedo ("RockAlbedo", 2D) = "white" {}
         [NoScaleOffset]_RockNormals ("Rock Normals", 2D) = "bump" {}
         [NoScaleOffset]_RockHeight ("Rock Height", 2D) = "gray" {}

@@ -9,6 +9,7 @@ float4 _RockAlbedo_ST;
 sampler2D _RockNormals;
 float _Gloss;
 float4 _Color;
+float4 _AmbientLight;
 float _NormalIntensity;
 sampler2D _RockHeight;
 float _HeightIntensity;
@@ -44,7 +45,7 @@ v2f vert(appdata v)
     v2f o;
     o.uv = TRANSFORM_TEX(v.uv, _RockAlbedo);
     
-    o.uv = Rotate(o.uv, _Time.y);
+    //o.uv = Rotate(o.uv - float2(0.5,0.5), _Time.y * 0.5) + 0.5; // For rotating the texture
 
     float height = tex2Dlod(_RockHeight, float4(o.uv, 0, 0)).r * 2 - 1; //*2-1 would make it go from -1 to 1 earlier it was 0 to 1. Mip level is also needed in x and y axis
     v.vertex.xyz += v.normal * (height * _HeightIntensity);
@@ -89,6 +90,10 @@ float4 frag(v2f i) : SV_Target
 
         float3 diffuseLight = (attenuation * lambert) * _LightColor0.xyz;
 
+    #ifdef IS_IN_BASE_PASS
+        diffuseLight += _AmbientLight.rgb; //Adds indirect lighting
+    #endif
+    
 
         //Specular Lighting
         float3 V = normalize(_WorldSpaceCameraPos.xyz - i.wPos);
