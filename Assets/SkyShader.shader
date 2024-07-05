@@ -50,7 +50,7 @@ Shader "Unlit/SkyShader"
 
             float4 frag (v2f i) : SV_Target
             {
-                float4 col = tex2D(_MainTex, DirToRectilinear(i.viewDirection));
+                float4 col = tex2Dlod(_MainTex, float4(DirToRectilinear(i.viewDirection),0,0));
                 return col;
             }
             ENDCG
