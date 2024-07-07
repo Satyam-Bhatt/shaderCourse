@@ -10,6 +10,9 @@ Shader "Unlit/LightingShader"
         [NoScaleOffset]_RockHeight ("Rock Height", 2D) = "gray" {}
         _NormalIntensity("Normal Intensity", Range(0,1)) = 1
         _HeightIntensity("Height Intensity", Range(0,0.2)) = 0
+        [NoScaleOffset]_DiffuseIBL("Diffuse IBL", 2D) = "black" {}
+        [NoScaleOffset]_SpecularIBL("Specular IBL", 2D) = "black" {}
+        _SpecIBLIntensity("Spec IBL Intensity", Range(0,1)) = 1
     }
     SubShader
     {

@@ -3,6 +3,7 @@
 #include "AutoLight.cginc"
 
 #define USE_LIGHTING
+#define TAU 6.28318530718
 
 sampler2D _RockAlbedo;
 float4 _RockAlbedo_ST;
@@ -13,6 +14,9 @@ float4 _AmbientLight;
 float _NormalIntensity;
 sampler2D _RockHeight;
 float _HeightIntensity;
+sampler2D _DiffuseIBL;
+sampler2D _SpecularIBL;
+float _SpecIBLIntensity;
 
 struct appdata
 {
@@ -38,6 +42,12 @@ float2 Rotate(float2 v, float angleRad)
     float ca = cos(angleRad);
     float sa = sin(angleRad);
     return float2(ca * v.x - sa * v.y, sa * v.x + ca * v.y); //This comes from rotation matrix
+}
+float2 DirToRectilinear(float3 dir)
+{
+    float x = atan2(dir.z, dir.x) / TAU + 0.5; //range from 0 to 1
+    float y = dir.y * 0.5 + 0.5; //range from 0 to 1
+    return float2(x, y);
 }
 
 v2f vert(appdata v)
@@ -91,12 +101,13 @@ float4 frag(v2f i) : SV_Target
         float3 diffuseLight = (attenuation * lambert) * _LightColor0.xyz;
 
     #ifdef IS_IN_BASE_PASS
-        diffuseLight += _AmbientLight.rgb; //Adds indirect lighting
+        float3 diffuseIBL = tex2Dlod(_DiffuseIBL, float4(DirToRectilinear(N),0,0)).xyz;
+        diffuseLight += diffuseIBL; //Adds indirect lighting
     #endif
     
 
         //Specular Lighting
-        float3 V = normalize(_WorldSpaceCameraPos.xyz - i.wPos);
+    float3 V = normalize(_WorldSpaceCameraPos.xyz - i.wPos);
         //float3 R = reflect(-L,N);
         float3 H = normalize(V + L);
         float blinnPhong = max(0, dot(N, H));
@@ -106,6 +117,16 @@ float4 frag(v2f i) : SV_Target
 
         float3 specularLight = pow(blinnPhong, specularExpoenent) * (lambert > 0) * _Gloss * attenuation;
         specularLight *= _LightColor0.xyz;
+    
+    #ifdef IS_IN_BASE_PASS
+            float fresnel = pow(1-saturate(dot(V,N)),5);
+    
+            float3 viewReflection = reflect(-V, N); //negate it as reflect takes in the incoming vector
+            float mip = (1-_Gloss) * 6;
+            float3 specularIBL = tex2Dlod(_SpecularIBL, float4(DirToRectilinear(viewReflection), mip, mip)).rgb;
+            specularLight += specularIBL * _SpecIBLIntensity * fresnel;
+
+    #endif
                  
         return float4(specularLight + diffuseLight * surfaceColor, 1);
     #else
